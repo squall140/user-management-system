@@ -1,0 +1,200 @@
+server:
+  port: 8999
+  additionalPort: 8001,8002
+  servlet:
+    context-path: /ums-api
+
+spring:
+  application:
+    name: ums-api
+#  messages:
+#    basename: classpath:i18n/messages/messages                                      #国际化配置
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: noreply-dev@bieases.com
+#    password: dpkmvczkpwmqjzoj
+#    properties.mail.smtp:
+#      auth: true
+#      starttls.enable: true
+#      ssl.trust: smtp.gmail.com
+  liquibase:
+    change-log: classpath:/db/changelog/master.xml #指定master.xml文件的位置
+  autoconfigure:
+    #过滤druid自动装配
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  #数据源配置
+#  redis:
+#    # 地址
+#    host: 69.231.169.19
+#    # 端口，默认为6379
+#    port: 16379
+#    # 数据库索引
+#    database: 0
+#    # 密码
+#    password: SvweoFlWXaem0Xk
+#    # 连接超时时间
+#    timeout: 10s
+#    lettuce:
+#      pool:
+#        # 连接池中的最小空闲连接
+#        min-idle: 0
+#        # 连接池中的最大空闲连接
+#        max-idle: 8
+#        # 连接池的最大数据库连接数
+#        max-active: 8
+#        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+#        max-wait: -1ms
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    dynamic:
+      #设置默认的数据源或者数据源组,默认值即为master
+      primary: master
+      #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://nx-dev-bieases-rds-a.cd6zdteoiebu.rds.cn-northwest-1.amazonaws.com.cn:13306/db_biease?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true
+          username: admin
+          #password: dPMhRLp7yNGASz1
+          password: ENC(ka+/nFLgtk6sX6kAE4ETBi3CF0TJwTluOIb+xEc1vwZfN7ZRmr9Ij6RC1bsvZKB3jfSwZbnwKDbj0Yb7kUGWbBrk+OfULiaGVydPcUt5vjOoafpi6UlnW/VKpjYKy7dNUeP6Ht7pp239pDEbMtK9WfwtA61rIJGGIkocn8jwUWSLPGWMIsqoWAydtlVsHR365bBrDi+UKw0EEPfbjhvv3uQI2veBdJKuSHDuFlPd/cO9Gzn61j5o8WLQrLmqeXJO497UURHae7HrNZ3eOtMbaRjbPzkHgQ5j0ucDowJXD6tBBsDlQBoePQFpEBzntLHEcnkSlITk3mZsSNiE7pL1bw==)
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          druid:
+            # 初始连接数
+            initial-size: 5
+            # 最小连接池数量
+            minIdle: 10
+            # 最大连接池数量
+            max-active: 20
+            # 配置获取连接等待超时的时间
+            max-wait: 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            time-between-eviction-runs-millis: 2000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            min-evictable-idle-time-millis: 300000
+            # 配置一个连接在池中最大生存的时间，单位是毫秒
+            max-evictable-idle-time-millis: 600000
+        slave:
+          # 从数据源开关/默认关闭
+          enabled: false
+          url:
+          username:
+          password:
+    druid:
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      ########### 启用内置过滤器（第一个 stat必须，否则监控不到SQL）##########
+      filters: stat,wall,log4j2
+      # 自己配置监控统计拦截的filter
+      filter:
+        # 开启druid-datasource的状态监控
+        stat:
+          enabled: true
+          # 开启慢sql监控，超过1s 就认为是慢sql，记录到日志中
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        # 日志监控，使用slf4j 进行日志输出
+        slf4j:
+          enabled: true
+          statement-log-error-enabled: false
+          statement-create-after-log-enabled: false
+          statement-close-after-log-enabled: false
+          result-set-open-after-log-enabled: false
+          result-set-close-after-log-enabled: false
+        wall:
+          config:
+            multi-statement-allow: true
+      ########## 配置WebStatFilter，用于采集web关联监控的数据 ##########
+      web-stat-filter:
+        enabled: true                   # 启动 StatFilter
+        url-pattern: /*                 # 过滤所有url
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" # 排除一些不必要的url
+        session-stat-enable: true       # 开启session统计功能
+        session-stat-max-count: 1000    # session的最大个数,默认100
+      ########## 配置StatViewServlet（监控页面），用于展示Druid的统计信息 ##########
+      stat-view-servlet:
+        enabled: true                   # 启用StatViewServlet
+        url-pattern: /druid/*           # 访问内置监控页面的路径，内置监控页面的首页是/druid/index.html
+        reset-enable: false             # 不允许清空统计数据,重新计算
+        login-username: such            # 配置监控页面访问账户和密码
+        login-password: 123             # druid 的web界面为 /druid/login.html
+        allow: 127.0.0.1                # 允许访问的地址，如果allow没有配置或者为空，则允许所有访问
+        deny:                           # 拒绝访问的地址，deny优先于allow，如果在deny列表中，就算在allow列表中，也会被拒绝
+
+swagger2:
+  termsOfServiceUrl: localhost:${server.port}
+  description: ${spring.application.name}-swagger2-api
+  title: ${spring.application.name}-swagger2-api
+  version: 1.0
+  name: ${spring.application.name}
+  url: localhost:${server.port}
+  email: 149906878@qq.comw
+  enable: true
+mybatis-plus:
+  type-aliases-package: com.suchusa.biease.core.entity                            #配置mybatis扫描的entity包
+  global-config:
+    db-column-underline: false                                                      #驼峰下划线转换
+    refresh-mapper: true                                                            #刷新mapper 调试神器
+    db-config:                                                                      #开始配置逻辑删除
+      update-strategy: NOT_EMPTY                                                    #update方法更新数据时过滤null和空字符串(默认NOT_NULL)
+      logic-delete-field: deleted                                                   # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1                                                         # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0                                                     # 逻辑未删除值(默认为 0)
+  configuration:
+    map-underscore-to-camel-case: true                                              #自定义SQL注入器
+    cache-enabled: false                                                            #配置的缓存的全局开关
+    lazyLoadingEnabled: true                                                        #延时加载的开关
+    multipleResultSetsEnabled: true                                                 #开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性
+    safe-result-handler-enabled: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl                           #sql日志，如果不想打印，请注释
+    mapper-locations: classpath:mapper/*.xml                                        #配置mybatis的mapper配置的xml文件
+
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456
+  # 令牌有效期（默认15分钟）
+  expireTime: 6000000
+  # Jwt Token 校验开关(0-开启；1-关闭)
+  flag: 1
+
+interceptor:
+  #默认开关为true
+  switch:
+    #OPT拦截器开关
+    otp: true
+    #防重复提交开关
+    repeatSubmit: false
+    #登录Token校验开关
+    loginToken: true
+    #签名+防重放
+    sign: false
+    #Bieases 响应报文签名开关
+    bieasesSign: false
+knife4j:
+  # 开启增强配置
+  enable: true
+  # 开启Swagger的Basic认证功能,默认是false
+  basic:
+    enable: true
+    # Basic认证用户名
+    username: admin
+    # Basic认证密码
+    password: 123456
+asynThreadPool:
+  #异步线程池
+  corePoolSize: 2
+  maximumPoolSize: 4
+  keepAliveTime: 60
+
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: /Users/leif/IdeaProjects/ums/logs
+  pattern:
+    level: INFO
