@@ -1,0 +1,188 @@
+server:
+  port: 8999
+  additionalPort: 8001,8002
+  servlet:
+    context-path: /ums-api
+
+spring:
+  application:
+    name: ums-api
+  liquibase:
+    change-log: classpath:/liquibase/changelog/master.xml
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: org.postgresql.Driver
+    druid:
+      # 主库数据源
+      master:
+        url: jdbc:postgresql://localhost:15432/postgres?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        username: postgres
+        password: postgres
+      # 从库数据源
+      slave:
+        # 从数据源开关/默认关闭
+        enabled: false
+        url:
+        username:
+        password:
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置连接超时时间
+      connectTimeout: 30000
+      # 配置网络超时时间
+      socketTimeout: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT version()
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: false
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: ruoyi
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+#  messages:
+#    basename: classpath:i18n/messages/messages                                      #国际化配置
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: noreply-dev@bieases.com
+#    password: dpkmvczkpwmqjzoj
+#    properties.mail.smtp:
+#      auth: true
+#      starttls.enable: true
+#      ssl.trust: smtp.gmail.com
+  autoconfigure:
+    #过滤druid自动装配
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  # redis 配置
+  redis:
+    # 地址
+    host: 127.0.0.1
+    # 端口，默认为6379
+    port: 16379
+    # 数据库索引
+    database: 0
+    # 密码
+    password:
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+
+swagger2:
+  termsOfServiceUrl: localhost:${server.port}
+  description: ${spring.application.name}-swagger2-api
+  title: ${spring.application.name}-swagger2-api
+  version: 1.0
+  name: ${spring.application.name}
+  url: localhost:${server.port}
+  email: squall140@gmail.com
+  enable: true
+
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: org.ums.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: postgresql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456
+  # 令牌有效期（默认15分钟）
+  expireTime: 6000000
+  # Jwt Token 校验开关(0-开启；1-关闭)
+  flag: 1
+
+interceptor:
+  #默认开关为true
+  switch:
+    #OPT拦截器开关
+    otp: true
+    #防重复提交开关
+    repeatSubmit: false
+    #登录Token校验开关
+    loginToken: true
+    #签名+防重放
+    sign: false
+    #Bieases 响应报文签名开关
+    bieasesSign: false
+knife4j:
+  # 开启增强配置
+  enable: true
+  # 开启Swagger的Basic认证功能,默认是false
+  basic:
+    enable: true
+    # Basic认证用户名
+    username: admin
+    # Basic认证密码
+    password: 123456
+asynThreadPool:
+  #异步线程池
+  corePoolSize: 2
+  maximumPoolSize: 4
+  keepAliveTime: 60
+
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: /Users/leif/IdeaProjects/ums/logs
+  pattern:
+    level: INFO
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
