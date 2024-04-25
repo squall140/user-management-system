@@ -14,5 +14,11 @@
     <artifactId>ums-api</artifactId>
     <version>1.0.0</version>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.leif</groupId>
+            <artifactId>ums-admin</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 </project>
