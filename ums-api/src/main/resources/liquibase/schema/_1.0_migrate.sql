@@ -1361,25 +1361,25 @@ ALTER TABLE "public"."qrtz_triggers" ADD CONSTRAINT "QRTZ_TRIGGERS_ibfk_1" FOREI
 
 
 
-CREATE OR REPLACE FUNCTION "public"."find_in_set"(int8, varchar)
-  RETURNS "pg_catalog"."bool" AS $BODY$
-DECLARE
-STR ALIAS FOR $1;
-  STRS ALIAS FOR $2;
-  POS INTEGER;
-  STATUS BOOLEAN;
-BEGIN
-SELECT POSITION( ','||STR||',' IN ','||STRS||',') INTO POS;
-IF POS > 0 THEN
-	  STATUS = TRUE;
-ELSE
-	  STATUS = FALSE;
-END IF;
-RETURN STATUS;
-END;
-$BODY$
-LANGUAGE plpgsql VOLATILE
-  COST 100;
+-- CREATE OR REPLACE FUNCTION "public"."find_in_set"(int8, varchar)
+--   RETURNS "pg_catalog"."bool" AS $BODY$
+-- DECLARE
+-- STR ALIAS FOR $1;
+--   STRS ALIAS FOR $2;
+--   POS INTEGER;
+--   STATUS BOOLEAN;
+-- BEGIN
+-- SELECT POSITION( ','||STR||',' IN ','||STRS||',') INTO POS;
+-- IF POS > 0 THEN
+-- 	  STATUS = TRUE;
+-- ELSE
+-- 	  STATUS = FALSE;
+-- END IF;
+-- RETURN STATUS;
+-- END;
+-- $BODY$
+-- LANGUAGE plpgsql VOLATILE
+--   COST 100;
 
 
 alter sequence sys_user_user_id_seq  restart  3;
