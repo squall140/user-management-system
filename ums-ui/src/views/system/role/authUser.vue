@@ -34,7 +34,7 @@
           size="mini"
           @click="openSelectUser"
           v-hasPermi="['system:role:add']"
-        >添加用户</el-button>
+        >add user</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -45,7 +45,7 @@
           :disabled="multiple"
           @click="cancelAuthUserAll"
           v-hasPermi="['system:role:remove']"
-        >批量取消授权</el-button>
+        >batch cancel authorization</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,28 +54,28 @@
           icon="el-icon-close"
           size="mini"
           @click="handleClose"
-        >关闭</el-button>
+        >close</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-      <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
-      <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-      <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
-      <el-table-column label="状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="username" prop="userName" :show-overflow-tooltip="true" />
+      <el-table-column label="nickname" prop="nickName" :show-overflow-tooltip="true" />
+      <el-table-column label="email" prop="email" :show-overflow-tooltip="true" />
+      <el-table-column label="mobile" prop="phonenumber" :show-overflow-tooltip="true" />
+<!--      <el-table-column label="状态" align="center" prop="status">-->
+<!--        <template slot-scope="scope">-->
+<!--          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="createtime" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="operation" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -83,7 +83,7 @@
             icon="el-icon-circle-close"
             @click="cancelAuthUser(scope.row)"
             v-hasPermi="['system:role:remove']"
-          >取消授权</el-button>
+          >cancel authorization</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -105,7 +105,7 @@ import selectUser from "./selectUser";
 
 export default {
   name: "AuthUser",
-  dicts: ['sys_normal_disable'],
+  dicts: [],
   components: { selectUser },
   data() {
     return {
@@ -176,22 +176,22 @@ export default {
     /** 取消授权按钮操作 */
     cancelAuthUser(row) {
       const roleId = this.queryParams.roleId;
-      this.$modal.confirm('确认要取消该用户"' + row.userName + '"角色吗？').then(function() {
+      this.$modal.confirm('please confirm if cancel the current user role of "' + row.userName + '"？').then(function() {
         return authUserCancel({ userId: row.userId, roleId: roleId });
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("取消授权成功");
+        this.$modal.msgSuccess("cancel successfully");
       }).catch(() => {});
     },
     /** 批量取消授权按钮操作 */
     cancelAuthUserAll(row) {
       const roleId = this.queryParams.roleId;
       const userIds = this.userIds.join(",");
-      this.$modal.confirm('是否取消选中用户授权数据项？').then(function() {
+      this.$modal.confirm('Whether to uncheck the user authorization data item？').then(function() {
         return authUserCancelAll({ roleId: roleId, userIds: userIds });
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("取消授权成功");
+        this.$modal.msgSuccess("uncheck successfully");
       }).catch(() => {});
     }
   }

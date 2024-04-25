@@ -35,7 +35,9 @@ export default {
   },
   data() {
     return {
-      title: process.env.VUE_APP_TITLE,
+      // title: process.env.VUE_APP_TITLE,
+      // TODO: change this value to the env.VUE_APP_TITLE
+      title: "UMS",
       logo: logoImg
     }
   }

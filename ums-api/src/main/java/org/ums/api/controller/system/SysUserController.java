@@ -1,5 +1,7 @@
 package org.ums.api.controller.system;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.ums.common.annotation.Log;
 import org.ums.common.controller.BaseController;
 import org.ums.common.domain.AjaxResult;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
  * @author ruoyi
  */
 @RestController
+@Api(tags={"user management api"})
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController
 {
@@ -51,6 +54,7 @@ public class SysUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
+    @ApiOperation(value = "get user by a SysUser object", notes = "get an user by object")
     public TableDataInfo list(SysUser user)
     {
         startPage();
@@ -71,12 +75,12 @@ public class SysUserController extends BaseController
         AjaxResult ajax = AjaxResult.success();
         List<SysRole> roles = roleService.selectRoleAll();
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
-        ajax.put("posts", postService.selectPostAll());
+//        ajax.put("posts", postService.selectPostAll());
         if (StringUtils.isNotNull(userId))
         {
             SysUser sysUser = userService.selectUserById(userId);
             ajax.put(AjaxResult.DATA_TAG, sysUser);
-            ajax.put("postIds", postService.selectPostListByUserId(userId));
+//            ajax.put("postIds", postService.selectPostListByUserId(userId));
             ajax.put("roleIds", sysUser.getRoles().stream().map(SysRole::getRoleId).collect(Collectors.toList()));
         }
         return ajax;
@@ -212,6 +216,7 @@ public class SysUserController extends BaseController
     @GetMapping("/deptTree")
     public AjaxResult deptTree(SysDept dept)
     {
-        return success(deptService.selectDeptTreeList(dept));
+        return null;
+//        return success(deptService.selectDeptTreeList(dept));
     }
 }

@@ -57,6 +57,31 @@
                 </configuration>
             </plugin>
 
+
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.6.1</version>
+                <configuration>
+                    <!--指定Liquibase的变更日志文件路径，该文件用于定义数据库变更的历史记录和当前版本的状态-->
+                    <changeLogFile>${project.basedir}/src/main/resources/liquibase/changelog/master.xml</changeLogFile>
+                    <!--数据库连接-->
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://localhost:15432/postgres</url>
+                    <username>postgres</username>
+                    <password>postgres</password>
+                    <!--输出文件编码-->
+                    <outputFileEncoding>UTF-8</outputFileEncoding>
+                    <!--执行的时候是否显示详细的参数信息-->
+                    <verbose>true</verbose>
+                    <!--连接非本地数据库是否弹出提示框-->
+                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                    <!--生成changelog文件内容-->
+                    <diffTypes>tables, views, columns, indexs,foreignkeys, primarykeys, uniqueconstraints, data</diffTypes>
+                </configuration>
+            </plugin>
+
+
         </plugins>
     <finalName>${project.artifactId}</finalName>
     </build>
