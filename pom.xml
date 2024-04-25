@@ -52,9 +52,6 @@
         <maven.compiler.target>11</maven.compiler.target>
 
         <spring.version>5.3.20</spring.version>
-        <swagger.version>2.10.0</swagger.version>
-        <swagger-annotations.version>1.5.22</swagger-annotations.version>
-        <knife4j-spring-boot-starter.version>2.0.4</knife4j-spring-boot-starter.version>
         <!--
             fix bug   lombok.noArgsConstructor.extraPrivate=true  in  v1.16.22
             https://juejin.cn/post/7122040982605922340
@@ -73,6 +70,7 @@
         <poi.version>4.1.2</poi.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <guava.version>30.0-android</guava.version>
+        <swagger.version>3.0.0</swagger.version>
     </properties>
 
     <parent>
@@ -240,19 +238,6 @@
             <version>${druid.version}</version>
         </dependency>
 
-        <!-- knife4j -->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>${knife4j-spring-boot-starter.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- log4j -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -328,6 +313,27 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.4.7</version>
         </dependency>
+
+        <!-- Swagger3依赖 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-models</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
 
         <!-- 解析客户端操作系统、浏览器等 -->
         <dependency>

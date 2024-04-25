@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
  * @author: Leif
  * @date: 2022/9/14 上午10:00
  */
-@Configuration
+//@Configuration
 public class UndertowConfig {
     @Value("${server.additionalPort}")
     private String additionalPort;
