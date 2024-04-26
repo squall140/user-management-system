@@ -72,15 +72,15 @@ spring:
             multi-statement-allow: true
 #  messages:
 #    basename: classpath:i18n/messages/messages                                      #国际化配置
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: noreply-dev@bieases.com
-#    password: dpkmvczkpwmqjzoj
-#    properties.mail.smtp:
-#      auth: true
-#      starttls.enable: true
-#      ssl.trust: smtp.gmail.com
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: squal140@gmail.com
+    password: iovebfwlsyxzkfmi
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
   autoconfigure:
     #过滤druid自动装配
     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
@@ -173,9 +173,7 @@ ruoyi:
   name: RuoYi
   version: 3.8.7
   copyrightYear: 2024
-  # 获取ip地址开关
   addressEnabled: false
-  # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
 
 logging:
@@ -185,9 +183,7 @@ logging:
   pattern:
     level: INFO
 
-# 防止XSS攻击
 xss:
-  # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
   excludes: /system/notice

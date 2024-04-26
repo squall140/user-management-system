@@ -1,5 +1,6 @@
 package org.ums.api.controller.system;
 
+import io.swagger.annotations.ApiOperation;
 import org.ums.common.controller.BaseController;
 import org.ums.common.domain.AjaxResult;
 import org.ums.common.domain.model.RegisterBody;
@@ -34,5 +35,12 @@ public class SysRegisterController extends BaseController
         }
         String msg = registerService.register(user);
         return StringUtils.isEmpty(msg) ? success() : error(msg);
+    }
+
+    @PostMapping("/emailVerificationLink")
+    @ApiOperation(value = "activate email", notes = "user registration")
+    public AjaxResult emailVerificationLink(String email) throws Exception {
+        // TODO:
+        return null;
     }
 }

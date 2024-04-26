@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.ums.common.annotation.Log;
 import org.ums.common.controller.BaseController;
 import org.ums.common.domain.AjaxResult;
+import org.ums.common.domain.entity.Email;
 import org.ums.common.domain.entity.SysDept;
 import org.ums.common.domain.entity.SysRole;
 import org.ums.common.domain.entity.SysUser;
@@ -22,9 +23,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.ums.framework.web.service.EmailService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -37,17 +44,21 @@ import java.util.stream.Collectors;
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController
 {
+    private static final ThreadPoolExecutor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(10, 50, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1000));
+
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private ISysUserService userService;
 
     @Autowired
     private ISysRoleService roleService;
 
-    @Autowired
-    private ISysDeptService deptService;
+//    @Autowired
+//    private ISysDeptService deptService;
 
-    @Autowired
-    private ISysPostService postService;
+//    @Autowired
+//    private ISysPostService postService;
 
     /**
      * 获取用户列表
@@ -108,7 +119,26 @@ public class SysUserController extends BaseController
         }
         user.setCreateBy(getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        return toAjax(userService.insertUser(user));
+
+        if (userService.insertUser(user) > 0 ) {
+            // send mail
+            String subject = "Your UMS password---pleases keep it safe";
+            String template = "registerSuccess.ftl";
+            Map<String, Object> model = new HashMap<>(16);
+            model.put("firstName", user.getNickName());
+            model.put("emailVerificationLink","https://localhost/login" );
+
+            THREAD_POOL_EXECUTOR.execute(() -> {
+                Email email = new Email();
+                email.setTo(user.getEmail());
+                email.setSubject(subject);
+                email.setTemplateName(template);
+                email.setModel(model);
+                emailService.sendEmailWithTemplate(email);
+            });
+        }
+
+        return AjaxResult.success();
     }
 
     /**
