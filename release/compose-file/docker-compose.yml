@@ -1,0 +1,55 @@
+version: '3'
+
+volumes:
+  postgres-ums-data:
+
+services:
+  ums-db:
+    container_name: ums-db
+    image: postgres:11-alpine
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-ums-data:/var/lib/postgresql/data
+
+#  ums-liquibase:
+#    container_name: ums-liquibase
+#    depends_on:
+#      - ums-db
+#    platform: linux/amd64
+#    image: liquibase/liquibase:4.4.0
+#    command: [
+#      "liquibase",
+#      "--url=jdbc:postgresql://ums-db:$POSTGRES_PORT/$POSTGRES_DB",
+#      "--username=$POSTGRES_USER", "--password=$POSTGRES_PASSWORD",
+#      "--classpath=changelog",
+#      "--changeLogFile=changelog.xml",
+#      "update"
+#    ]
+#    volumes:
+#      - ./config/changelog.xml:/liquibase/changelog.xml
+#      - ./scripts:/liquibase/scripts
+
+  ums-api:
+    image: ums/ums-api:1.0
+    container_name: ums-api
+    restart: always
+    depends_on:
+      - ums-db
+    logging:
+      driver: "journald"
+    ports:
+      - 8999:8999
+    environment:
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true -Dfile.encoding=utf-8 -server -XX:+UseZGC -Dspring.config.location=/app/config/application.yml -Dspring.profiles.active=dev
+    volumes:
+      - /home/leif/IdeaProjects/ums/logs/ums-api:/app/logs
+      - /home/leif/IdeaProjects/ums/config/ums-api:/app/config
+    ulimits:
+      core: 0
+    expose:
+      - 25
+      - 8999

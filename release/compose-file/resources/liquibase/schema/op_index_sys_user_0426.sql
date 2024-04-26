@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX idx_unique_sys_user_email ON sys_user (email);
