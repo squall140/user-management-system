@@ -72,28 +72,18 @@ spring:
             multi-statement-allow: true
 #  messages:
 #    basename: classpath:i18n/messages/messages                                      #国际化配置
-
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: leif.zhai@gmail.com
-#    password: fsinkcdgxymfhdcf
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
-#            required: true
-
   mail:
-    # SMTP 服务器地址
-    host: smtp.qq.com
-    username: 149906878@qq.com
-    password: wmrdtusyuszwbgfd
+    host: smtp.gmail.com
     port: 587
-    protocol: smtp
-    default-encoding: UTF-8
+    username: leif.zhai@gmail.com
+    password: fsinkcdgxymfhdcf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   autoconfigure:
     #过滤druid自动装配
     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure

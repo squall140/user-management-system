@@ -126,7 +126,8 @@ public class SysUserController extends BaseController
             String template = "registerSuccess.ftl";
             Map<String, Object> model = new HashMap<>(16);
             model.put("firstName", user.getNickName());
-            model.put("emailVerificationLink","https://localhost/login" );
+            // for local test, the url start with "http://"
+            model.put("emailVerificationLink","http://localhost/login" );
 
             THREAD_POOL_EXECUTOR.execute(() -> {
                 Email email = new Email();
