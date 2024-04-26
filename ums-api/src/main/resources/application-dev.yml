@@ -75,12 +75,15 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: squal140@gmail.com
-    password: iovebfwlsyxzkfmi
-    properties.mail.smtp:
-      auth: true
-      starttls.enable: true
-      ssl.trust: smtp.gmail.com
+    username: leif.zhai@gmail.com
+    password: fsinkcdgxymfhdcf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   autoconfigure:
     #过滤druid自动装配
     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
