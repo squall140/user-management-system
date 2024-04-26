@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="20240426-01" author="Leif">
-        <sqlFile path="classpath:/liquibase/schema/_1.0_migrate.sql"/>
+    <changeSet id="20240425-01" author="Leif">
+        <sqlFile path="classpath:/liquibase/schema/init.sql"/>
     </changeSet>
 </databaseChangeLog>

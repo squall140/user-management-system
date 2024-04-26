@@ -14,7 +14,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
         "org.ums.framework",
         "org.ums.admin",
         "org.ums.common",
-}
+        "org.ums.api",
+        }
 )
 public class ApiBoot {
     public static void main(String[] args){ SpringApplication.run(ApiBoot.class, args);}

@@ -1,12 +1,14 @@
 server:
   port: 8999
-  additionalPort: 8001,8002
+#  additionalPort: 8001,8002
   servlet:
-    context-path: /ums-api
+    context-path: /
 
 spring:
   application:
     name: ums-api
+  messages:
+    basename: i18n/messages
   liquibase:
     change-log: classpath:/liquibase/changelog/master.xml
   datasource:
@@ -70,15 +72,15 @@ spring:
             multi-statement-allow: true
 #  messages:
 #    basename: classpath:i18n/messages/messages                                      #国际化配置
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: noreply-dev@bieases.com
-#    password: dpkmvczkpwmqjzoj
-#    properties.mail.smtp:
-#      auth: true
-#      starttls.enable: true
-#      ssl.trust: smtp.gmail.com
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: squal140@gmail.com
+    password: iovebfwlsyxzkfmi
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
   autoconfigure:
     #过滤druid自动装配
     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
@@ -105,15 +107,14 @@ spring:
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
 
-swagger2:
-  termsOfServiceUrl: localhost:${server.port}
-  description: ${spring.application.name}-swagger2-api
-  title: ${spring.application.name}-swagger2-api
-  version: 1.0
-  name: ${spring.application.name}
-  url: localhost:${server.port}
-  email: squall140@gmail.com
-  enable: true
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10
+
 
 mybatis:
   # 搜索指定包别名
@@ -123,6 +124,12 @@ mybatis:
   # 加载全局的配置文件
   configLocation: classpath:mybatis/mybatis-config.xml
 
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  pathMapping: /dev-api
 
 # PageHelper分页插件
 pagehelper:
@@ -131,15 +138,15 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
+# token配置
 token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456
-  # 令牌有效期（默认15分钟）
-  expireTime: 6000000
-  # Jwt Token 校验开关(0-开启；1-关闭)
-  flag: 1
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30
+
 
 interceptor:
   #默认开关为true
@@ -154,21 +161,20 @@ interceptor:
     sign: false
     #Bieases 响应报文签名开关
     bieasesSign: false
-knife4j:
-  # 开启增强配置
-  enable: true
-  # 开启Swagger的Basic认证功能,默认是false
-  basic:
-    enable: true
-    # Basic认证用户名
-    username: admin
-    # Basic认证密码
-    password: 123456
+
 asynThreadPool:
   #异步线程池
   corePoolSize: 2
   maximumPoolSize: 4
   keepAliveTime: 60
+
+
+ruoyi:
+  name: RuoYi
+  version: 3.8.7
+  copyrightYear: 2024
+  addressEnabled: false
+  captchaType: math
 
 logging:
   config: classpath:logback-spring.xml
@@ -177,12 +183,9 @@ logging:
   pattern:
     level: INFO
 
-# 防止XSS攻击
 xss:
-  # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
-
